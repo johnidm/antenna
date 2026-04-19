@@ -30,6 +30,26 @@ export async function getRandomStations(take = 20) {
   })
 }
 
+export async function getNextStation(id: string) {
+  return db.radioStation.findFirst({
+    where: {
+      id: { gt: id },
+      streamUrl: { not: null },
+    },
+    orderBy: { id: 'asc' },
+  })
+}
+
+export async function getPreviousStation(id: string) {
+  return db.radioStation.findFirst({
+    where: {
+      id: { lt: id },
+      streamUrl: { not: null },
+    },
+    orderBy: { id: 'desc' },
+  })
+}
+
 export async function getStationsPaginated(
   options: GetStationsPaginatedOptions
 ): Promise<PaginatedStationsResult> {

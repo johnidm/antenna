@@ -103,3 +103,43 @@ html.dark audio {
   background: var(--fg);
   color: var(--bg);
 }
+
+/* ---------- Player volume slider ---------- */
+
+.player-volume::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--border);
+  border-radius: 999px;
+}
+
+.player-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -5px;
+  border-radius: 999px;
+  background: var(--fg);
+  border: 2px solid var(--bg);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.player-volume::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.player-volume::-moz-range-track {
+  height: 2px;
+  background: var(--border);
+  border-radius: 999px;
+}
+
+.player-volume::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--fg);
+  border: 2px solid var(--bg);
+  cursor: pointer;
+}
