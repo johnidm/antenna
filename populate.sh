@@ -10,7 +10,8 @@ def trim:
   if type == "string" then sub("^\\s+"; "") | sub("\\s+$"; "") else "" end;
 
 .[0:1000] | .[] | 
-"INSERT INTO radio_station (name, country, language, stream_url, homepage_url, logo_url, tags) VALUES (" +
+"INSERT INTO radio_station (id, name, country, language, stream_url, homepage_url, logo_url, tags) VALUES (" +
+"gen_random_uuid(), " +
 "'" + (.name | trim | escape_sql) + "', " +
 "'" + (.country | escape_sql) + "', " +
 "'" + (.language | escape_sql) + "', " +
@@ -21,7 +22,7 @@ def trim:
 ");"
 EOF
 
-jq -r -f transform.jq stations.json > populate.sql
+jq -r -f transform.jq data/stations.json > populate.sql
 
 echo "Checking the first few generated inserts:"
 head -n 2 populate.sql

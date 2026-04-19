@@ -11,7 +11,7 @@ datasource db {
 }
 
 model RadioStation {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid(7))
   name        String
   country     String?
   language    String?

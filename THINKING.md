@@ -158,3 +158,7 @@ pnpx prisma migrate dev --name init
 
 Use cursor pagination
 
+
+```bash
+pnpx prisma studio
+```
