@@ -3,9 +3,17 @@ import { createServerFn } from '@tanstack/react-start'
 import { db } from '@/lib/db'
 
 const getStations = createServerFn({ method: 'GET' }).handler(async () => {
-  return db.radioStation.findMany({
-    orderBy: { name: 'asc' },
+  const count = await db.radioStation.count()
+  const take = 20
+
+  const randomSkip = Math.floor(Math.random() * (count - take))
+  console.log("[DEBUG] Total stations:", count)
+  const stations = await db.radioStation.findMany({
+    skip: randomSkip,
+    take,
   })
+
+  return stations
 })
 
 export const Route = createFileRoute('/')({
@@ -22,7 +30,7 @@ function StationsPage() {
       <p>{stations.length} stations found</p>
 
       <div>
-        {stations.map((station: any) => (
+        {stations.map((station) => (
           <article key={station.id}>
             {station.logoUrl && (
               <img
@@ -37,7 +45,7 @@ function StationsPage() {
               {station.country && <p>{station.country}</p>}
               {station.tags.length > 0 && (
                 <div>
-                  {station.tags.slice(0, 3).map((tag: string) => (
+                  {station.tags.slice(0, 3).map((tag) => (
                     <span key={tag}>{tag}</span>
                   ))}
                 </div>
