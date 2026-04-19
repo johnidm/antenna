@@ -183,3 +183,10 @@ The stations endpoint (`GET /api/radios/stations`) supports:
 Pagination helpers (`encodeCursor`, `decodeCursor`, `buildNextPageUrl`, `buildPrevPageUrl`) are centralised in `src/lib/pagination.ts`.
 
 ## Add metadata to the app
+
+Add metadata to the app to improve SEO and social sharing.
+
+## Improve the UI
+
+**Clean & modern (light/dark toggle)**
+Neutral palette, generous whitespace, subtle shadows — respects the existing theme-init script (light/dark/auto)

@@ -29,10 +29,6 @@ Antenna is a web app for streaming radio stations from around the world. This fi
 
 ## Key Conventions
 
-### CSS Style
-
-Don't use any CSS style yet. Use raw HTML instead.
-
 ### Path Aliases
 
 - `@/*` → `src/*` — use this for all imports within `src/`

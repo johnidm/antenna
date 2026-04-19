@@ -19,7 +19,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Antenna: Where Radio Streaming Comes Alive',
       },
     ],
     links: [
@@ -39,9 +39,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body>
+      <body className="min-h-screen flex flex-col">
         <Header />
-        {children}
+        <div className="flex-1 mx-auto w-full max-w-5xl px-4 sm:px-6 py-8 sm:py-12">
+          {children}
+        </div>
         <Footer />
         <TanStackDevtools
           config={{
