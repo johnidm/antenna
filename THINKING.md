@@ -148,17 +148,38 @@ pnpm create @tanstack/start@latest .
 
 > Important: Check if the Node version is compatible with the project. Some errors can happen if the Node is out of date.
 
-## Install and setup Prima ORM
+## Install and setup Prisma ORM
 
-Setup migrations.
+Prisma 7 uses a driver adapter instead of the classic binary query engine. The client is configured with `PrismaPg` and exported as a singleton from `src/lib/db.ts`.
+
+Run migrations:
 
 ```bash
 pnpx prisma migrate dev --name init
 ```
 
-Use cursor pagination
-
+Inspect data with Prisma Studio:
 
 ```bash
 pnpx prisma studio
 ```
+
+After any schema change, regenerate the client:
+
+```bash
+pnpx prisma generate
+```
+
+## Create API endpoints
+
+API routes live under `src/routes/api/` and use TanStack Router's `server.handlers` pattern.
+
+The stations endpoint (`GET /api/radios/stations`) supports:
+
+- **Cursor-based pagination** — `cursor` (forward) and `before` (backward) params, both base64-encoded item IDs
+- **Sorting** — `sortBy` (`name` | `country`) and `order` (`asc` | `desc`)
+- **Filtering** — `country`, `language`, and `tag` query params
+
+Pagination helpers (`encodeCursor`, `decodeCursor`, `buildNextPageUrl`, `buildPrevPageUrl`) are centralised in `src/lib/pagination.ts`.
+
+## Add metadata to the app
