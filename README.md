@@ -2,11 +2,68 @@
 
 ## Getting Started
 
-To run this application:
+### 1. Start the database
+
+Spin up the local PostgreSQL container (defaults: user `postgres`, password `postgres`, db `antenna` on port `5432`):
+
+```bash
+docker compose up -d db
+```
+
+Override any credential via environment variables if needed:
+
+```bash
+POSTGRES_USER=myuser POSTGRES_PASSWORD=secret POSTGRES_DB=mydb docker compose up -d db
+```
+
+### 2. Run database migrations
+
+```bash
+pnpx prisma migrate dev --name init
+```
+
+### 3. Populate with station data
+
+```bash
+./populate.sh
+```
+
+> Requires `jq` to be installed and a `data/stations.json` file to be present.
+
+### 4. Install dependencies and start the dev server
 
 ```bash
 pnpm install
 pnpm dev
+```
+
+---
+
+## Running the application locally (production)
+
+Start the full stack (PostgreSQL + app) with a single command:
+
+```bash
+docker compose up -d
+```
+
+Then seed the database with station data:
+
+```bash
+./populate.sh
+```
+
+The app will be available at `http://localhost:3000`.
+
+---
+
+## Resetting the database
+
+```bash
+docker compose down -v   # removes the volume
+docker compose up -d db
+pnpx prisma migrate dev --name init
+./populate.sh
 ```
 
 ## REST API
