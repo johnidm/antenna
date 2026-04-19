@@ -1,19 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { db } from '@/lib/db'
+import { getRandomStations } from '@/lib/repositories/stations'
 
 const getStations = createServerFn({ method: 'GET' }).handler(async () => {
-  const count = await db.radioStation.count()
-  const take = 20
-
-  const randomSkip = Math.floor(Math.random() * (count - take))
-  console.log("[DEBUG] Total stations:", count)
-  const stations = await db.radioStation.findMany({
-    skip: randomSkip,
-    take,
-  })
-
-  return stations
+  return getRandomStations(20)
 })
 
 export const Route = createFileRoute('/')({
@@ -51,9 +41,7 @@ function StationsPage() {
                 </div>
               )}
               {station.streamUrl && (
-                <a href={station.streamUrl} target="_blank" rel="noopener noreferrer">
-                  ▶ Stream
-                </a>
+                <audio controls preload="none" src={station.streamUrl} />
               )}
             </div>
           </article>
