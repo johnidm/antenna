@@ -16,7 +16,7 @@ const ORDER_VALUES = ['asc', 'desc'] as const
 type SortField = (typeof SORT_FIELDS)[number]
 type Order = (typeof ORDER_VALUES)[number]
 
-export const Route = createFileRoute('/v1/radios/stations')({
+export const Route = createFileRoute('/api/radios/stations')({
   server: {
     handlers: {
       GET: async () => {

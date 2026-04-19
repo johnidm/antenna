@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as V1RadiosStationsRouteImport } from './routes/v1/radios/stations'
+import { Route as ApiRadiosStationsRouteImport } from './routes/api/radios/stations'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -23,40 +23,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const V1RadiosStationsRoute = V1RadiosStationsRouteImport.update({
-  id: '/v1/radios/stations',
-  path: '/v1/radios/stations',
+const ApiRadiosStationsRoute = ApiRadiosStationsRouteImport.update({
+  id: '/api/radios/stations',
+  path: '/api/radios/stations',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/v1/radios/stations': typeof V1RadiosStationsRoute
+  '/api/radios/stations': typeof ApiRadiosStationsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/v1/radios/stations': typeof V1RadiosStationsRoute
+  '/api/radios/stations': typeof ApiRadiosStationsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/v1/radios/stations': typeof V1RadiosStationsRoute
+  '/api/radios/stations': typeof ApiRadiosStationsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/v1/radios/stations'
+  fullPaths: '/' | '/about' | '/api/radios/stations'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/v1/radios/stations'
-  id: '__root__' | '/' | '/about' | '/v1/radios/stations'
+  to: '/' | '/about' | '/api/radios/stations'
+  id: '__root__' | '/' | '/about' | '/api/radios/stations'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  V1RadiosStationsRoute: typeof V1RadiosStationsRoute
+  ApiRadiosStationsRoute: typeof ApiRadiosStationsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +75,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/v1/radios/stations': {
-      id: '/v1/radios/stations'
-      path: '/v1/radios/stations'
-      fullPath: '/v1/radios/stations'
-      preLoaderRoute: typeof V1RadiosStationsRouteImport
+    '/api/radios/stations': {
+      id: '/api/radios/stations'
+      path: '/api/radios/stations'
+      fullPath: '/api/radios/stations'
+      preLoaderRoute: typeof ApiRadiosStationsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,7 +88,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  V1RadiosStationsRoute: V1RadiosStationsRoute,
+  ApiRadiosStationsRoute: ApiRadiosStationsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
