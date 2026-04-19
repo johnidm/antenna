@@ -1,0 +1,24 @@
+// This is your Prisma schema file.
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model RadioStation {
+  id          Int      @id @default(autoincrement())
+  name        String
+  country     String?
+  language    String?
+  streamUrl   String?  @map("stream_url")
+  homepageUrl String?  @map("homepage_url")
+  logoUrl     String?  @map("logo_url")
+  tags        String[]
+
+  @@map("radio_station")
+}
