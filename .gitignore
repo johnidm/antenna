@@ -15,3 +15,5 @@ todos.json
 /generated/prisma
 
 /data
+
+populate.sh

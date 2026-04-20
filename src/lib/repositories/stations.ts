@@ -9,6 +9,7 @@ interface GetStationsPaginatedOptions {
   beforeId?: string
   sortBy: SortField
   order: Order
+  query?: string
   country?: string
   language?: string
   tag?: string
@@ -53,7 +54,7 @@ export async function getPreviousStation(id: string) {
 export async function getStationsPaginated(
   options: GetStationsPaginatedOptions
 ): Promise<PaginatedStationsResult> {
-  const { pageSize, cursorId, beforeId, sortBy, order, country, language, tag } = options
+  const { pageSize, cursorId, beforeId, sortBy, order, query, country, language, tag } = options
 
   const isBackwards = beforeId !== undefined
 
@@ -69,6 +70,9 @@ export async function getStationsPaginated(
 
   const items = await db.radioStation.findMany({
     where: {
+      ...(query !== undefined && query !== '' && {
+        name: { contains: query, mode: 'insensitive' },
+      }),
       ...(country !== undefined && { country }),
       ...(language !== undefined && { language }),
       ...(tag !== undefined && { tags: { has: tag } }),
