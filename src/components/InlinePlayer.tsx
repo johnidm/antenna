@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import { Loader2, Pause, Play } from 'lucide-react'
 import { claim, release } from '@/lib/audioRegistry'
 
-export function InlinePlayer({ src }: { src: string }) {
+type InlinePlayerProps = {
+  src: string
+  onPlay?: () => void
+}
+
+export function InlinePlayer({ src, onPlay }: InlinePlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -14,7 +19,6 @@ export function InlinePlayer({ src }: { src: string }) {
     setError(false)
   }, [src])
 
-  // Release from registry on unmount
   useEffect(() => {
     const el = audioRef.current
     return () => {
@@ -22,7 +26,7 @@ export function InlinePlayer({ src }: { src: string }) {
     }
   }, [])
 
-  function toggle() {
+  const toggle = () => {
     const el = audioRef.current
     if (!el) return
 
@@ -39,8 +43,14 @@ export function InlinePlayer({ src }: { src: string }) {
     }
   }
 
+  const label = error ? 'Unavailable' : isPlaying ? 'Playing' : isLoading ? 'Loading' : 'Preview'
+
   return (
-    <div className="flex items-center gap-2 text-fg-muted">
+    <div
+      className="flex items-center gap-2"
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
+    >
       <audio
         ref={audioRef}
         src={src}
@@ -50,6 +60,7 @@ export function InlinePlayer({ src }: { src: string }) {
           if (el) claim(el)
           setIsPlaying(true)
           setIsLoading(false)
+          onPlay?.()
         }}
         onPause={() => setIsPlaying(false)}
         onWaiting={() => setIsLoading(true)}
@@ -62,11 +73,15 @@ export function InlinePlayer({ src }: { src: string }) {
         className="hidden"
       />
 
+      {isPlaying && <Equalizer />}
+
       <button
         type="button"
         onClick={toggle}
-        aria-label={isPlaying ? 'Pause' : 'Play'}
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border border-border text-fg transition-colors hover:border-fg hover:bg-fg hover:text-bg"
+        disabled={error}
+        aria-label={isPlaying ? 'Pause preview' : 'Play preview'}
+        aria-pressed={isPlaying}
+        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border bg-surface text-fg transition-colors hover:border-fg hover:bg-fg hover:text-bg disabled:cursor-not-allowed disabled:opacity-40"
       >
         {isLoading ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -77,9 +92,19 @@ export function InlinePlayer({ src }: { src: string }) {
         )}
       </button>
 
-      <span className="font-mono text-[10px] uppercase tracking-widest">
-        {error ? 'Unavailable' : isPlaying ? 'Live' : isLoading ? 'Loading' : 'Play'}
+      <span className="hidden font-mono text-[10px] uppercase tracking-widest text-fg-muted sm:inline">
+        {label}
       </span>
+    </div>
+  )
+}
+
+function Equalizer() {
+  return (
+    <div aria-hidden="true" className="flex h-5 items-end gap-[2px]">
+      <span className="animate-eq-bar inline-block w-[3px] bg-fg" style={{ height: '40%', animationDuration: '0.9s' }} />
+      <span className="animate-eq-bar inline-block w-[3px] bg-fg" style={{ height: '80%', animationDuration: '0.7s', animationDelay: '0.15s' }} />
+      <span className="animate-eq-bar inline-block w-[3px] bg-fg" style={{ height: '60%', animationDuration: '1.1s', animationDelay: '0.3s' }} />
     </div>
   )
 }
