@@ -187,7 +187,7 @@ function About() {
           <span className="shrink-0 rounded-sm bg-fg px-2 py-0.5 font-mono text-[11px] font-semibold text-bg">
             GET
           </span>
-          <code className="font-mono text-sm text-fg">/api/radios/stations</code>
+          <code className="font-mono text-sm text-fg">/api/radio/stations</code>
         </div>
 
         {/* Parameters */}
@@ -248,8 +248,8 @@ function About() {
   ],
   "pagination": {
     "nextCursor": "MDE4ZWRj...",
-    "nextPage": "https://antenna.show/api/radios/stations?pageSize=20&cursor=MDE4ZWRj...",
-    "previousPage": "https://antenna.show/api/radios/stations?pageSize=20&cursor=MDAwMDAw...",
+    "nextPage": "https://antenna.show/api/radio/stations?pageSize=20&cursor=MDE4ZWRj...",
+    "previousPage": "https://antenna.show/api/radio/stations?pageSize=20&cursor=MDAwMDAw...",
     "hasMore": true,
     "pageSize": 20
   }
@@ -276,16 +276,16 @@ function About() {
         </h3>
         <pre className="overflow-x-auto rounded-md border border-border bg-surface p-4 font-mono text-xs leading-relaxed text-fg-muted">
           {`# First page, 10 results sorted by name
-curl "https://antenna.show/api/radios/stations?pageSize=10"
+curl "https://antenna.show/api/radio/stations?pageSize=10"
 
 # Next page using cursor from previous response
-curl "https://antenna.show/api/radios/stations?pageSize=10&cursor=<nextCursor>"
+curl "https://antenna.show/api/radio/stations?pageSize=10&cursor=<nextCursor>"
 
 # Filter by country, sorted descending
-curl "https://antenna.show/api/radios/stations?country=Germany&sortBy=name&order=desc"
+curl "https://antenna.show/api/radio/stations?country=Germany&sortBy=name&order=desc"
 
 # Filter by tag
-curl "https://antenna.show/api/radios/stations?tag=jazz"`}
+curl "https://antenna.show/api/radio/stations?tag=jazz"`}
         </pre>
       </section>
 
