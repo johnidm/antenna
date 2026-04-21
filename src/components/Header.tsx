@@ -10,12 +10,17 @@ export default function Header() {
       <nav className="mx-auto flex h-16 w-full max-w-7xl items-center gap-2 px-3 sm:h-20 sm:gap-4 sm:px-6 lg:h-24 lg:gap-6">
         {/* LEFT: wordmark */}
         <div className="flex shrink-0 items-center">
-          <Link to="/" className="flex items-baseline gap-1.5 font-mono leading-none sm:gap-2.5">
+          <Link to="/" className="flex items-center gap-1.5 font-mono leading-none sm:gap-2.5">
+            <img
+              src="/logo/favicon.svg"
+              alt="Antenna logo"
+              className="h-6 w-6 shrink-0 sm:h-7 sm:w-7 lg:h-8 lg:w-8"
+            />
             <span className="text-base font-bold tracking-tight text-fg sm:text-lg lg:text-xl">
               ANTENNA
             </span>
             <span className="hidden text-base font-normal tracking-tight text-fg-muted sm:inline sm:text-lg lg:text-xl">
-              LIVE
+              SHOW
             </span>
           </Link>
         </div>
