@@ -129,57 +129,57 @@ export function Player() {
         />
       )}
 
-      <div className="mx-auto grid w-full max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:gap-6 sm:px-8 sm:py-5">
         {/* LEFT: station info */}
-        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
           {currentStation.logoUrl ? (
             <img
               src={currentStation.logoUrl}
               alt=""
-              height={40}
-              width={40}
-              className="h-9 w-9 shrink-0 rounded-sm border border-border bg-surface-2 object-contain p-1 sm:h-10 sm:w-10"
+              height={56}
+              width={56}
+              className="h-12 w-12 shrink-0 rounded-sm border border-border bg-surface-2 object-contain p-1 sm:h-14 sm:w-14"
             />
           ) : (
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-border bg-surface-2 font-mono text-sm text-fg-muted sm:h-10 sm:w-10">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border border-border bg-surface-2 font-mono text-base text-fg-muted sm:h-14 sm:w-14">
               {currentStation.name.charAt(0).toUpperCase()}
             </div>
           )}
           <div className="hidden min-w-0 sm:block">
-            <p className="truncate font-mono text-xs font-bold tracking-wider text-fg" title={currentStation.name}>
+            <p className="truncate font-mono text-sm font-bold tracking-wider text-fg" title={currentStation.name}>
               {title}
             </p>
-            <p className="truncate font-mono text-[10px] uppercase tracking-widest text-fg-muted">
+            <p className="truncate font-mono text-xs uppercase tracking-widest text-fg-muted">
               {subtitle}
             </p>
           </div>
         </div>
 
         {/* CENTER: controls */}
-        <div className="flex shrink-0 flex-col items-center gap-1">
-          <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 flex-col items-center gap-1.5">
+          <div className="flex items-center gap-3 sm:gap-4">
             <button
               type="button"
               onClick={playPrev}
               disabled={loading || atStart}
               aria-label="Previous station"
-              className="flex h-8 w-8 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex h-10 w-10 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg disabled:cursor-not-allowed disabled:opacity-30"
             >
-              <SkipBack className="h-4 w-4" />
+              <SkipBack className="h-5 w-5" />
             </button>
 
             <button
               type="button"
               onClick={togglePlay}
               aria-label={isPlaying ? 'Pause' : 'Play'}
-              className="flex h-9 w-9 items-center justify-center rounded-sm bg-fg text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="flex h-12 w-12 items-center justify-center rounded-sm bg-fg text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {isBuffering ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-5 w-5 animate-spin" />
               ) : isPlaying ? (
-                <Pause className="h-4 w-4" />
+                <Pause className="h-5 w-5" />
               ) : (
-                <Play className="h-4 w-4 translate-x-[1px]" />
+                <Play className="h-5 w-5 translate-x-[1px]" />
               )}
             </button>
 
@@ -188,25 +188,25 @@ export function Player() {
               onClick={playNext}
               disabled={loading || atEnd}
               aria-label="Next station"
-              className="flex h-8 w-8 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex h-10 w-10 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg disabled:cursor-not-allowed disabled:opacity-30"
             >
-              <SkipForward className="h-4 w-4" />
+              <SkipForward className="h-5 w-5" />
             </button>
           </div>
-          <span className="font-mono text-[10px] uppercase tracking-widest text-fg-muted">
+          <span className="font-mono text-[11px] uppercase tracking-widest text-fg-muted">
             {statusLabel}
           </span>
         </div>
 
         {/* RIGHT: volume */}
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={toggleMute}
             aria-label={isMuted ? 'Unmute' : 'Mute'}
-            className="flex h-8 w-8 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg"
+            className="flex h-10 w-10 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg"
           >
-            {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
           </button>
           <input
             type="range"
@@ -216,7 +216,7 @@ export function Player() {
             value={volume}
             onChange={(e) => setVolume(Number(e.target.value))}
             aria-label="Volume"
-            className="player-volume h-1 w-20 cursor-pointer appearance-none rounded-full bg-border accent-fg sm:w-24"
+            className="player-volume h-1 w-24 cursor-pointer appearance-none rounded-full bg-border accent-fg sm:w-32"
           />
         </div>
       </div>

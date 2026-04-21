@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { fetchStations } from '@/lib/services/stations'
+import { fetchStations, fetchCountries } from '@/lib/services/stations'
 import { usePlayer, type Station } from '@/lib/playerContext'
 import { useSearch } from '@/lib/searchContext'
 import { InlinePlayer } from '@/components/InlinePlayer'
@@ -21,10 +21,16 @@ function StationsPage() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const [countries, setCountries] = useState<string[]>([])
+  const [activeCountry, setActiveCountry] = useState<string | null>(null)
+
   const requestIdRef = useRef(0)
   const preselectedRef = useRef(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
 
-  const load = async (query: string, cursorId?: string) => {
+  const load = async (query: string, country: string | null, cursorId?: string) => {
     const isInitial = !cursorId
     if (isInitial) {
       setLoading(true)
@@ -35,7 +41,14 @@ function StationsPage() {
 
     const id = ++requestIdRef.current
     try {
-      const res = await fetchStations({ data: { query, cursorId, pageSize: PAGE_SIZE } })
+      const res = await fetchStations({
+        data: {
+          query,
+          country: country ?? undefined,
+          cursorId,
+          pageSize: PAGE_SIZE,
+        },
+      })
       if (id !== requestIdRef.current) return // stale response
 
       if (!res.ok) {
@@ -61,11 +74,17 @@ function StationsPage() {
     }
   }
 
-  // Reload whenever the submitted query changes
+  // Fetch available countries once on mount
   useEffect(() => {
-    load(submittedQuery)
+    fetchCountries().then(setCountries).catch(() => {})
+  }, [])
+
+  // Reload whenever the submitted query or active country changes
+  useEffect(() => {
+    preselectedRef.current = false
+    load(submittedQuery, activeCountry)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submittedQuery])
+  }, [submittedQuery, activeCountry])
 
   // Preselect the first playable station once items are available
   useEffect(() => {
@@ -85,8 +104,30 @@ function StationsPage() {
     if (loadingMore || loading || !hasMore) return
     const last = items[items.length - 1]
     if (!last) return
-    load(submittedQuery, last.id)
+    load(submittedQuery, activeCountry, last.id)
   }
+
+  const toggleCountry = (country: string) => {
+    setActiveCountry((prev) => (prev === country ? null : country))
+  }
+
+  const updateScrollButtons = () => {
+    const el = scrollRef.current
+    if (!el) return
+    setCanScrollLeft(el.scrollLeft > 4)
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4)
+  }
+
+  const scrollNav = (dir: 'left' | 'right') => {
+    const el = scrollRef.current
+    if (!el) return
+    el.scrollBy({ left: dir === 'left' ? -200 : 200, behavior: 'smooth' })
+  }
+
+  // Initialise scroll button visibility once countries load
+  useEffect(() => {
+    updateScrollButtons()
+  }, [countries])
 
   return (
     <main>
@@ -99,12 +140,87 @@ function StationsPage() {
             {submittedQuery ? `Results for "${submittedQuery}"` : 'Radio Stations'}
           </h1>
         </div>
+
+        {/* Country tag navigation */}
+        {countries.length > 0 && (
+          <div className="flex items-center gap-2">
+            {/* Left arrow */}
+            <button
+              type="button"
+              onClick={() => scrollNav('left')}
+              disabled={!canScrollLeft}
+              aria-label="Scroll countries left"
+              className="nav-arrow shrink-0"
+            >
+              <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            {/* Scrollable pill row */}
+            <div className="relative min-w-0 flex-1">
+              <div
+                ref={scrollRef}
+                onScroll={updateScrollButtons}
+                className="country-scroll flex gap-1.5 overflow-x-auto py-0.5"
+                style={{ scrollbarWidth: 'none' }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setActiveCountry(null)}
+                  className={`tag-pill shrink-0 ${
+                    activeCountry === null ? 'tag-pill--active' : 'tag-pill--idle'
+                  }`}
+                >
+                  All
+                </button>
+                {countries.map((country) => (
+                  <button
+                    key={country}
+                    type="button"
+                    onClick={() => toggleCountry(country)}
+                    className={`tag-pill shrink-0 ${
+                      activeCountry === country ? 'tag-pill--active' : 'tag-pill--idle'
+                    }`}
+                  >
+                    {country}
+                  </button>
+                ))}
+              </div>
+              {/* Left fade */}
+              <div className={`pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-bg to-transparent transition-opacity duration-200 ${
+                canScrollLeft ? 'opacity-100' : 'opacity-0'
+              }`} />
+              {/* Right fade */}
+              <div className={`pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-bg to-transparent transition-opacity duration-200 ${
+                canScrollRight ? 'opacity-100' : 'opacity-0'
+              }`} />
+            </div>
+
+            {/* Right arrow */}
+            <button
+              type="button"
+              onClick={() => scrollNav('right')}
+              disabled={!canScrollRight}
+              aria-label="Scroll countries right"
+              className="nav-arrow shrink-0"
+            >
+              <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+        )}
       </header>
 
       <section>
         <header className="mb-3 flex items-end justify-between gap-4 sm:mb-4">
           <h2 className="font-mono text-base font-semibold tracking-tight text-fg sm:text-lg">
-            {submittedQuery ? 'Matching Stations' : 'Recommended Stations'}
+            {activeCountry
+              ? `Stations in ${activeCountry}`
+              : submittedQuery
+                ? 'Matching Stations'
+                : 'Recommended Stations'}
           </h2>
           <span className="font-mono text-[11px] uppercase tracking-widest text-fg-muted">
             {items.length.toString().padStart(2, '0')} shown
@@ -113,12 +229,10 @@ function StationsPage() {
 
         {error && !loading && (
           <div className="mb-4 flex items-center justify-between gap-4 rounded-md border border-border bg-surface p-4">
-            <p className="font-mono text-xs text-fg-muted">
-              {error}
-            </p>
+            <p className="font-mono text-xs text-fg-muted">{error}</p>
             <button
               type="button"
-              onClick={() => load(submittedQuery)}
+              onClick={() => load(submittedQuery, activeCountry)}
               className="rounded-sm border border-border px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-fg transition-colors hover:border-fg"
             >
               Retry
@@ -134,7 +248,9 @@ function StationsPage() {
           <p className="py-12 text-center font-mono text-xs uppercase tracking-widest text-fg-muted">
             {submittedQuery
               ? `No stations found for "${submittedQuery}"`
-              : 'No stations available'}
+              : activeCountry
+                ? `No stations found for ${activeCountry}`
+                : 'No stations available'}
           </p>
         ) : (
           <ul className="divide-y divide-border overflow-hidden rounded-md border border-border bg-surface">
@@ -158,7 +274,9 @@ function StationsPage() {
                   tabIndex={station.streamUrl ? 0 : undefined}
                   aria-pressed={station.streamUrl ? isActive : undefined}
                   className={`group flex flex-col gap-3 p-3 transition-colors sm:flex-row sm:items-center sm:gap-4 sm:p-4 ${
-                    station.streamUrl ? 'cursor-pointer hover:bg-surface-2 focus:outline-none focus-visible:bg-surface-2' : ''
+                    station.streamUrl
+                      ? 'cursor-pointer hover:bg-surface-2 focus:outline-none focus-visible:bg-surface-2'
+                      : ''
                   } ${isActive ? 'bg-surface-2' : ''}`}
                 >
                   {station.logoUrl ? (
@@ -203,9 +321,7 @@ function StationsPage() {
                   {station.streamUrl && (
                     <div className="flex shrink-0 items-center gap-2 self-start sm:self-auto">
                       <InlinePlayer src={station.streamUrl} />
-                      <div
-                        className="rounded-sm border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-muted transition-colors hover:border-fg hover:text-fg"
-                      >
+                      <div className="rounded-sm border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-muted transition-colors hover:border-fg hover:text-fg">
                         Play on Main
                       </div>
                     </div>
