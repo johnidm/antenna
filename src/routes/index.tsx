@@ -11,7 +11,7 @@ export const Route = createFileRoute('/')({
 })
 
 // TODO move the const to a file `lib/constants.ts`
-const PAGE_SIZE = 20
+const PAGE_SIZE = 32
 
 function StationsPage() {
   const { submittedQuery } = useSearch()
@@ -262,11 +262,12 @@ function StationsPage() {
                 : 'No stations available'}
           </p>
         ) : (
-          <ul className="divide-y divide-border overflow-hidden rounded-md border border-border bg-surface">
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
             {items.map((station) => {
               const isActive = currentStation?.id === station.id
+              const isPlayable = !!station.streamUrl
               const selectStation = () => {
-                if (!station.streamUrl) return
+                if (!isPlayable) return
                 setCurrentStation(station)
               }
               return (
@@ -279,80 +280,76 @@ function StationsPage() {
                       selectStation()
                     }
                   }}
-                  role={station.streamUrl ? 'button' : undefined}
-                  tabIndex={station.streamUrl ? 0 : undefined}
-                  aria-pressed={station.streamUrl ? isActive : undefined}
-                  className={`group flex flex-col gap-3 p-3 transition-colors sm:flex-row sm:items-center sm:gap-4 sm:p-4 ${
-                    station.streamUrl
-                      ? 'cursor-pointer hover:bg-surface-2 focus:outline-none focus-visible:bg-surface-2'
-                      : ''
-                  } ${isActive ? 'bg-surface-2' : ''}`}
+                  role={isPlayable ? 'button' : undefined}
+                  tabIndex={isPlayable ? 0 : undefined}
+                  aria-pressed={isPlayable ? isActive : undefined}
+                  className={`group relative flex flex-col overflow-hidden rounded-md border border-border bg-surface transition-colors focus:outline-none ${
+                    isPlayable
+                      ? 'cursor-pointer hover:bg-surface-2 hover:border-fg/40 focus-visible:border-fg'
+                      : 'opacity-80'
+                  } ${isActive ? 'bg-surface-2 border-fg/60' : ''}`}
                 >
-                  {station.logoUrl ? (
-                    <img
-                      src={station.logoUrl}
-                      alt=""
-                      height={48}
-                      width={48}
-                      className="h-12 w-12 shrink-0 rounded-sm border border-border bg-surface-2 object-contain p-1 transition-all group-hover:grayscale-0"
-                    />
-                  ) : (
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border border-border bg-surface-2 font-mono text-sm text-fg-muted">
-                      {station.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  {/* Thumbnail area */}
+                  <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-border bg-surface-2">
+                    {station.logoUrl ? (
+                      <img
+                        src={station.logoUrl}
+                        alt=""
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-contain p-6 transition-transform duration-300 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center font-mono text-4xl font-semibold text-fg-muted">
+                        {station.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
 
-                  <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-medium text-fg" title={station.name}>
-                      {station.name}
-                    </h3>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                      {station.country && (
-                        <small className="text-[11px] uppercase tracking-widest text-fg-muted">
-                          {station.country}
-                        </small>
-                      )}
-                      {station.tags.length > 0 && (
-                        <ul className="flex flex-wrap gap-1.5">
-                          {station.tags.slice(0, 3).map((tag) => (
-                            <li
-                              key={tag}
-                              className="rounded-sm border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted"
-                            >
-                              {tag}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
                   </div>
 
-                  {(station.streamUrl || station.homepageUrl) && (
-                    <div className="flex shrink-0 items-center gap-2 self-start sm:self-auto">
-                      {station.homepageUrl && (
-                        <a
-                          href={station.homepageUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          onKeyDown={(e) => e.stopPropagation()}
-                          aria-label={`Open ${station.name} homepage`}
-                          title="Open homepage"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-sm border border-border text-fg-muted transition-colors hover:border-fg hover:text-fg"
-                        >
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                      {station.streamUrl && (
-                        <>
-                          <InlinePlayer src={station.streamUrl} />
-                          <div className="rounded-sm border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-muted transition-colors hover:border-fg hover:text-fg">
-                            Play on Main
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )}
+                  {/* Metadata */}
+                  <div className="flex min-w-0 flex-1 flex-col gap-2 p-3 sm:p-4">
+                    <h3
+                      className="truncate font-mono text-sm font-semibold tracking-tight text-fg sm:text-base"
+                      title={station.name}
+                    >
+                      {station.name}
+                    </h3>
+
+                    {(station.country || station.tags.length > 0) && (
+                      <p className="text-sm leading-snug text-fg-muted">
+                        {[station.country, station.tags.slice(0, 2).join(', ')]
+                          .filter(Boolean)
+                          .join(' — ')}
+                      </p>
+                    )}
+
+                    {(isPlayable || station.homepageUrl) && (
+                      <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+                        {isPlayable ? (
+                          <InlinePlayer src={station.streamUrl!} />
+                        ) : (
+                          <span className="font-mono text-[10px] uppercase tracking-widest text-fg-muted">
+                            Offline
+                          </span>
+                        )}
+
+                        {station.homepageUrl && (
+                          <a
+                            href={station.homepageUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => e.stopPropagation()}
+                            aria-label={`Open ${station.name} homepage`}
+                            title="Open homepage"
+                            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border border-border text-fg-muted transition-colors hover:border-fg hover:text-fg"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </li>
               )
             })}
