@@ -106,42 +106,171 @@ html.dark audio {
 
 /* ---------- Player volume slider ---------- */
 
+.player-volume {
+  --_fill: 80%;
+  background: linear-gradient(
+    to right,
+    var(--fg) 0%,
+    var(--fg) var(--_fill),
+    var(--border) var(--_fill),
+    var(--border) 100%
+  );
+  border-radius: 999px;
+  transition: height 0.15s ease;
+}
+
+.player-volume:hover {
+  height: 6px !important;
+}
+
 .player-volume::-webkit-slider-runnable-track {
-  height: 2px;
-  background: var(--border);
+  height: 100%;
+  background: transparent;
   border-radius: 999px;
 }
 
 .player-volume::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   margin-top: -5px;
   border-radius: 999px;
   background: var(--fg);
-  border: 2px solid var(--bg);
+  border: 2px solid var(--surface);
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.35);
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.player-volume::-webkit-slider-thumb:hover {
+.player-volume:hover::-webkit-slider-thumb,
+.player-volume:focus-visible::-webkit-slider-thumb {
   transform: scale(1.15);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--fg) 15%, transparent);
 }
 
 .player-volume::-moz-range-track {
-  height: 2px;
-  background: var(--border);
+  height: 100%;
+  background: transparent;
+  border-radius: 999px;
+}
+
+.player-volume::-moz-range-progress {
+  height: 100%;
+  background: var(--fg);
   border-radius: 999px;
 }
 
 .player-volume::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 999px;
   background: var(--fg);
-  border: 2px solid var(--bg);
+  border: 2px solid var(--surface);
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.35);
   cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.player-volume:hover::-moz-range-thumb,
+.player-volume:focus-visible::-moz-range-thumb {
+  transform: scale(1.15);
+}
+
+/* ---------- Player surface & controls ---------- */
+
+.player-shell {
+  background: color-mix(in oklab, var(--surface) 82%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  box-shadow:
+    0 -1px 0 0 color-mix(in oklab, var(--fg) 6%, transparent) inset,
+    0 24px 60px -28px rgba(0, 0, 0, 0.45),
+    0 8px 24px -12px rgba(0, 0, 0, 0.25);
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .player-shell {
+    background: var(--surface);
+  }
+}
+
+.player-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: var(--fg-muted);
+  transition: color 0.15s ease, background-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+}
+
+.player-btn:hover:not(:disabled) {
+  color: var(--fg);
+  background: color-mix(in oklab, var(--fg) 8%, transparent);
+}
+
+.player-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.player-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px color-mix(in oklab, var(--fg) 35%, transparent);
+}
+
+.player-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.player-btn--primary {
+  color: var(--bg);
+  background: var(--fg);
+  box-shadow:
+    0 10px 22px -10px color-mix(in oklab, var(--fg) 80%, transparent),
+    0 4px 10px -4px rgba(0, 0, 0, 0.25);
+}
+
+.player-btn--primary:hover:not(:disabled) {
+  color: var(--bg);
+  background: var(--fg);
+  transform: scale(1.04);
+  box-shadow:
+    0 14px 28px -10px color-mix(in oklab, var(--fg) 80%, transparent),
+    0 6px 12px -4px rgba(0, 0, 0, 0.3);
+}
+
+.player-btn--primary:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* ---------- Live pulsing dot ---------- */
+
+@keyframes live-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--fg) 55%, transparent);
+    opacity: 1;
+  }
+  70% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--fg) 0%, transparent);
+    opacity: 0.85;
+  }
+}
+
+.live-dot {
+  animation: live-pulse 1.6s ease-out infinite;
+}
+
+/* ---------- Thin progress / live bar ---------- */
+
+@keyframes buffer-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+.player-bar-buffer {
+  animation: buffer-slide 1.2s ease-in-out infinite;
 }
 
 /* ---------- Inline equalizer animation ---------- */

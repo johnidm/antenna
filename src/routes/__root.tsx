@@ -119,7 +119,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="min-h-screen flex flex-col pb-20 sm:pb-24">
+      <body className="min-h-screen flex flex-col pb-28 sm:pb-32">
         <SearchProvider>
           <PlayerProvider>
             <Header />

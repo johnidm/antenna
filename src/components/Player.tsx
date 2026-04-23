@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Loader2, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from 'lucide-react'
+import { Loader2, Pause, Play, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react'
 import { claim, release } from '@/lib/audioRegistry'
 import { usePlayer } from '@/lib/playerContext'
 
@@ -95,91 +95,135 @@ export function Player() {
   const title = currentStation.name.toUpperCase()
   const subtitle = (currentStation.country ?? 'ANTENNA_LIVE_TRANS').toUpperCase().replace(/\s+/g, '_')
   const statusLabel = error ? 'UNAVAILABLE' : isBuffering ? 'BUFFERING' : isPlaying ? 'LIVE' : 'READY'
+  const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume < 0.5 ? Volume1 : Volume2
+  const effectiveVolume = isMuted ? 0 : volume
+  const volumeFill = `${Math.round(effectiveVolume * 100)}%`
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface">
-      {/* Progress / live indicator */}
-      <div className="relative h-[2px] w-full bg-border">
-        <div
-          className={`absolute inset-y-0 left-0 bg-fg transition-[width] duration-500 ${
-            isPlaying ? 'w-full' : isBuffering ? 'w-1/3 animate-pulse' : 'w-0'
-          }`}
-        />
-      </div>
-
-      {src && (
-        <audio
-          ref={audioRef}
-          src={src}
-          preload="none"
-          onPlaying={() => {
-            const el = audioRef.current
-            if (el) claim(el)
-            setIsPlaying(true)
-            setIsBuffering(false)
-          }}
-          onPause={() => setIsPlaying(false)}
-          onWaiting={() => setIsBuffering(true)}
-          onCanPlay={() => setIsBuffering(false)}
-          onError={() => {
-            setError('Stream unavailable')
-            setIsBuffering(false)
-            setIsPlaying(false)
-          }}
-        />
-      )}
-
-      <div className="mx-auto grid w-full max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:gap-6 sm:px-8 sm:py-5">
-        {/* LEFT: station info */}
-        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-          {currentStation.logoUrl ? (
-            <img
-              src={currentStation.logoUrl}
-              alt=""
-              height={56}
-              width={56}
-              className="h-12 w-12 shrink-0 rounded-sm border border-border bg-surface-2 object-contain p-1 sm:h-14 sm:w-14"
-            />
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-2 pb-2 sm:px-4 sm:pb-4">
+      <div
+        className="player-shell pointer-events-auto relative mx-auto w-full max-w-7xl overflow-hidden rounded-2xl border border-border"
+        role="region"
+        aria-label="Audio player"
+      >
+        {/* Progress / live indicator */}
+        <div className="relative h-[2px] w-full overflow-hidden bg-border/60">
+          {isBuffering ? (
+            <div className="player-bar-buffer absolute inset-y-0 left-0 w-1/3 bg-fg/80" />
           ) : (
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border border-border bg-surface-2 font-mono text-base text-fg-muted sm:h-14 sm:w-14">
-              {currentStation.name.charAt(0).toUpperCase()}
-            </div>
+            <div
+              className={`absolute inset-y-0 left-0 bg-fg transition-[width,opacity] duration-500 ${
+                isPlaying ? 'w-full opacity-100' : 'w-0 opacity-0'
+              }`}
+            />
           )}
-          <div className="hidden min-w-0 sm:block">
-            <p className="truncate font-mono text-sm font-bold tracking-wider text-fg" title={currentStation.name}>
-              {title}
-            </p>
-            <p className="truncate font-mono text-xs uppercase tracking-widest text-fg-muted">
-              {subtitle}
-            </p>
-          </div>
         </div>
 
-        {/* CENTER: controls */}
-        <div className="flex shrink-0 flex-col items-center gap-1.5">
-          <div className="flex items-center gap-3 sm:gap-4">
+        {src && (
+          <audio
+            ref={audioRef}
+            src={src}
+            preload="none"
+            onPlaying={() => {
+              const el = audioRef.current
+              if (el) claim(el)
+              setIsPlaying(true)
+              setIsBuffering(false)
+            }}
+            onPause={() => setIsPlaying(false)}
+            onWaiting={() => setIsBuffering(true)}
+            onCanPlay={() => setIsBuffering(false)}
+            onError={() => {
+              setError('Stream unavailable')
+              setIsBuffering(false)
+              setIsPlaying(false)
+            }}
+          />
+        )}
+
+        <div className="mx-auto grid w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-3 py-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-6 sm:px-6 sm:py-4">
+          {/* LEFT: station info */}
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+            <div className="relative shrink-0">
+              {currentStation.logoUrl ? (
+                <img
+                  src={currentStation.logoUrl}
+                  alt=""
+                  height={56}
+                  width={56}
+                  className="h-11 w-11 rounded-lg border border-border bg-surface-2 object-contain p-1 shadow-sm sm:h-14 sm:w-14"
+                />
+              ) : (
+                <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-surface-2 font-mono text-base font-semibold text-fg-muted shadow-sm sm:h-14 sm:w-14">
+                  {currentStation.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+              {isPlaying && (
+                <span className="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center">
+                  <span className="live-dot h-2 w-2 rounded-full bg-fg" />
+                </span>
+              )}
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p
+                className="truncate font-mono text-[13px] font-bold tracking-wider text-fg sm:text-sm"
+                title={currentStation.name}
+              >
+                {title}
+              </p>
+              <div className="mt-0.5 flex items-center gap-2">
+                <p className="truncate font-mono text-[10px] uppercase tracking-widest text-fg-muted sm:text-xs">
+                  {subtitle}
+                </p>
+                <span
+                  aria-hidden="true"
+                  className="hidden h-1 w-1 shrink-0 rounded-full bg-border sm:inline-block"
+                />
+                <span
+                  className={`hidden shrink-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest sm:inline-flex ${
+                    error
+                      ? 'text-fg-muted'
+                      : isPlaying
+                        ? 'text-fg'
+                        : isBuffering
+                          ? 'text-fg-muted'
+                          : 'text-fg-muted'
+                  }`}
+                  aria-live="polite"
+                >
+                  {isPlaying && <span className="live-dot h-1.5 w-1.5 rounded-full bg-fg" />}
+                  {statusLabel}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CENTER: controls */}
+          <div className="col-start-2 row-start-1 flex shrink-0 items-center gap-1 sm:gap-2">
             <button
               type="button"
               onClick={playPrev}
               disabled={loading || atStart}
               aria-label="Previous station"
-              className="flex h-10 w-10 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg disabled:cursor-not-allowed disabled:opacity-30"
+              className="player-btn h-10 w-10"
             >
-              <SkipBack className="h-5 w-5" />
+              <SkipBack className="h-[18px] w-[18px]" />
             </button>
 
             <button
               type="button"
               onClick={togglePlay}
               aria-label={isPlaying ? 'Pause' : 'Play'}
-              className="flex h-12 w-12 items-center justify-center rounded-sm bg-fg text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
+              aria-pressed={isPlaying}
+              className="player-btn player-btn--primary h-12 w-12 sm:h-13 sm:w-13"
             >
               {isBuffering ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : isPlaying ? (
-                <Pause className="h-5 w-5" />
+                <Pause className="h-5 w-5" fill="currentColor" />
               ) : (
-                <Play className="h-5 w-5 translate-x-[1px]" />
+                <Play className="h-5 w-5 translate-x-[1px]" fill="currentColor" />
               )}
             </button>
 
@@ -188,36 +232,46 @@ export function Player() {
               onClick={playNext}
               disabled={loading || atEnd}
               aria-label="Next station"
-              className="flex h-10 w-10 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg disabled:cursor-not-allowed disabled:opacity-30"
+              className="player-btn h-10 w-10"
             >
-              <SkipForward className="h-5 w-5" />
+              <SkipForward className="h-[18px] w-[18px]" />
             </button>
           </div>
-          <span className="font-mono text-[11px] uppercase tracking-widest text-fg-muted">
-            {statusLabel}
-          </span>
-        </div>
 
-        {/* RIGHT: volume */}
-        <div className="flex items-center justify-end gap-3">
-          <button
-            type="button"
-            onClick={toggleMute}
-            aria-label={isMuted ? 'Unmute' : 'Mute'}
-            className="flex h-10 w-10 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg"
-          >
-            {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-          </button>
-          <input
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-            value={volume}
-            onChange={(e) => setVolume(Number(e.target.value))}
-            aria-label="Volume"
-            className="player-volume h-1 w-24 cursor-pointer appearance-none rounded-full bg-border accent-fg sm:w-32"
-          />
+          {/* MOBILE: status below title row (hidden on sm+) */}
+          <div className="col-span-3 row-start-2 -mt-1 flex items-center justify-start sm:hidden">
+            <span
+              className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-muted"
+              aria-live="polite"
+            >
+              {isPlaying && <span className="live-dot h-1.5 w-1.5 rounded-full bg-fg" />}
+              {statusLabel}
+            </span>
+          </div>
+
+          {/* RIGHT: volume */}
+          <div className="col-start-3 row-start-1 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={toggleMute}
+              aria-label={isMuted ? 'Unmute' : 'Mute'}
+              aria-pressed={isMuted}
+              className="player-btn h-9 w-9 sm:h-10 sm:w-10"
+            >
+              <VolumeIcon className="h-[18px] w-[18px]" />
+            </button>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={volume}
+              onChange={(e) => setVolume(Number(e.target.value))}
+              aria-label="Volume"
+              className="player-volume hidden h-1 w-24 cursor-pointer appearance-none rounded-full sm:block sm:w-32"
+              style={{ ['--_fill' as string]: volumeFill }}
+            />
+          </div>
         </div>
       </div>
     </div>
