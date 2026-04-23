@@ -9,6 +9,10 @@ type FetchStationsInput = {
   country?: string
 }
 
+export const fetchStationCount = createServerFn({ method: 'GET' }).handler(async () => {
+  return db.radioStation.count()
+})
+
 export const fetchCountries = createServerFn({ method: 'GET' }).handler(async () => {
   const rows = await db.radioStation.findMany({
     where: { country: { not: null } },

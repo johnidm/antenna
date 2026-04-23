@@ -80,7 +80,7 @@ export const Route = createFileRoute('/api/radio/stations')({
 
         const nextCursor = hasMore && lastItem ? encodeCursor(lastItem.id) : null
         const prevCursor = hasPrev && firstItem ? encodeCursor(firstItem.id) : null
-
+        // TODO create a type for the response wioth Zod alternative  
         return Response.json({
           data: page,
           pagination: {

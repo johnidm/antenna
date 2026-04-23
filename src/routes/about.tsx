@@ -270,7 +270,7 @@ function About() {
         </ul>
 
         {/* Examples */}
-        <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest">
+        <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widestOn ">
           <Terminal className="h-3.5 w-3.5" aria-hidden="true" />
           Examples
         </h3>

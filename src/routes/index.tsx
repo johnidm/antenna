@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { fetchStations, fetchCountries } from '@/lib/services/stations'
+import { fetchStations, fetchCountries, fetchStationCount } from '@/lib/services/stations'
 import { usePlayer, type Station } from '@/lib/playerContext'
 import { useSearch } from '@/lib/searchContext'
 import { InlinePlayer } from '@/components/InlinePlayer'
@@ -9,6 +9,7 @@ export const Route = createFileRoute('/')({
   component: StationsPage,
 })
 
+// TODO move the const to a file `lib/constants.ts`
 const PAGE_SIZE = 20
 
 function StationsPage() {
@@ -23,6 +24,7 @@ function StationsPage() {
 
   const [countries, setCountries] = useState<string[]>([])
   const [activeCountry, setActiveCountry] = useState<string | null>(null)
+  const [totalStations, setTotalStations] = useState<number | null>(null)
 
   const requestIdRef = useRef(0)
   const preselectedRef = useRef(false)
@@ -77,6 +79,7 @@ function StationsPage() {
   // Fetch available countries once on mount
   useEffect(() => {
     fetchCountries().then(setCountries).catch(() => {})
+    fetchStationCount().then(setTotalStations).catch(() => {})
   }, [])
 
   // Reload whenever the submitted query or active country changes
@@ -139,6 +142,11 @@ function StationsPage() {
           <h1 className="font-mono text-2xl font-semibold tracking-tight text-fg sm:text-3xl lg:text-4xl">
             {submittedQuery ? `Results for "${submittedQuery}"` : 'Radio Stations'}
           </h1>
+          {!submittedQuery && totalStations !== null && (
+            <p className="mt-2 font-mono text-sm text-fg-muted sm:text-base">
+              Explore {totalStations.toLocaleString('en-US')} stations around the world
+            </p>
+          )}
         </div>
 
         {/* Country tag navigation */}
