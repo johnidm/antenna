@@ -17,7 +17,7 @@ function About() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative mb-10 border-b border-border pb-10 sm:mb-14 sm:pb-14">
+      <section className="relative mb-10 border-border pb-10 sm:mb-6 sm:pb-6">
         <h1 className="font-mono text-3xl font-semibold tracking-tight text-fg sm:text-4xl lg:text-5xl">
           Tuning into the world,
           <br />
@@ -30,44 +30,7 @@ function About() {
         </div>
       </section>
 
-      {/* Story */}
-      <section className="mb-12 space-y-5 text-base leading-relaxed text-fg sm:text-lg">
-        <p>
-          Hi, I&apos;m <span className="font-semibold">Johni</span> — a software engineer from Brazil.
-          Since <span className="font-mono">2008</span>, I&apos;ve been using technology to make my
-          daily life better, and occasionally just to have fun.
-        </p>
-        <p>
-          As an enthusiast of radio, I built this project to help me discover stations from around
-          the world. Radio takes me back to my childhood — I was born and raised in the countryside,
-          where listening to the radio was a big part of growing up.
-        </p>
-        <p className="text-fg-muted">
-          This is an open source project. You can find the source code on{' '}
-          <a
-            href="https://github.com/johnidm/antenna"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 border-b border-border text-fg transition-colors hover:border-fg"
-          >
-            GitHub
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-          </a>
-          .
-        </p>
-        <p className="text-fg-muted">
-          Have a suggestion to improve the project? Send me an email at{' '}
-          <a
-            href="mailto:johni.douglas.marangon@gmail.com"
-            className="inline-flex items-center gap-1 border-b border-border text-fg transition-colors hover:border-fg"
-          >
-            johni.douglas.marangon@gmail.com
-          </a>
-          .
-        </p>
-      </section>
-
-      {/* Station count stat */}
+       {/* Station count stat */}
       <section className="mb-12">
         <div className="flex flex-col items-start gap-4 rounded-md border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -85,6 +48,43 @@ function About() {
             <Radio className="h-7 w-7 text-fg" aria-hidden="true" />
           </div>
         </div>
+      </section>
+
+      {/* Story */}
+      <section className="mb-12 space-y-5 text-base leading-relaxed text-fg sm:text-lg">
+        <p>
+          Hi, I&apos;m <span className="font-semibold">Johni</span> — a software engineer from Brazil.
+          Since <span className="font-mono">2008</span>, I&apos;ve been using technology to make my
+          daily life better, and occasionally just to have fun.
+        </p>
+        <p>
+          As an enthusiast of radio, I built this project to help me discover stations from around
+          the world. Radio takes me back to my childhood — I was born and raised in the countryside,
+          where listening to the radio was a big part of growing up.
+        </p>
+        <p>
+          This is an open source project. You can find the source code on{' '}
+          <a
+            href="https://github.com/johnidm/antenna"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 border-b border-border text-fg transition-colors hover:border-fg"
+          >
+            GitHub
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+          .
+        </p>
+        <p>
+          Have a suggestion to improve the project? Send me an email at{' '}
+          <a
+            href="mailto:johni.douglas.marangon@gmail.com"
+            className="inline-flex items-center gap-1 border-b border-border text-fg transition-colors hover:border-fg"
+          >
+            johni.douglas.marangon@gmail.com
+          </a>
+          .
+        </p>
       </section>
 
       {/* Coffee */}
@@ -191,7 +191,7 @@ function About() {
         </div>
 
         {/* Parameters */}
-        <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-fg-muted">
+        <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest">
           <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
           Query Parameters
         </h3>
@@ -228,7 +228,7 @@ function About() {
         </div>
 
         {/* Response */}
-        <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-fg-muted">
+        <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest">
           <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
           Response
         </h3>
@@ -270,7 +270,7 @@ function About() {
         </ul>
 
         {/* Examples */}
-        <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-fg-muted">
+        <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest">
           <Terminal className="h-3.5 w-3.5" aria-hidden="true" />
           Examples
         </h3>
