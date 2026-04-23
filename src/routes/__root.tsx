@@ -123,7 +123,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <SearchProvider>
           <PlayerProvider>
             <Header />
-            <div className="flex-1 mx-auto w-full max-w-5xl px-3 py-6 sm:px-6 sm:py-10 lg:py-12">
+            <div className="flex-1 mx-auto w-full max-w-5xl px-3 py-6 sm:px-6 sm:py-5 lg:py-6">
               {children}
             </div>
             <Player />
