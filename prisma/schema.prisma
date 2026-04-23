@@ -14,11 +14,16 @@ model RadioStation {
   id          String   @id @default(uuid(7))
   name        String
   country     String?
+  countryCode String?  @map("country_code")
   language    String?
-  streamUrl   String?  @map("stream_url")
+  streamUrl   String?  @unique @map("stream_url")
   homepageUrl String?  @map("homepage_url")
   logoUrl     String?  @map("logo_url")
   tags        String[]
 
+  @@index([country])
+  @@index([language])
+  @@index([name])
+  @@index([tags], type: Gin)
   @@map("radio_station")
 }

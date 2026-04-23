@@ -9,6 +9,13 @@ import { SearchProvider } from '../lib/searchContext'
 import appCss from '../styles.css?url'
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
+const SITE_TITLE = 'Antenna: Where Radio Streaming Comes Alive'
+const SITE_DESCRIPTION =
+  'Tune in to curated live radio stations from around the world with Antenna.'
+const OG_IMAGE_PATH = '/logo/antenna-512.png'
+const SITE_URL = 'https://antenna.show'
+const PAGE_URL = SITE_URL ?? '/'
+const OG_IMAGE_URL = SITE_URL ? `${SITE_URL}${OG_IMAGE_PATH}` : OG_IMAGE_PATH
 
 export const Route = createRootRoute({
   head: () => ({
@@ -21,7 +28,51 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Antenna: Where Radio Streaming Comes Alive',
+        title: SITE_TITLE,
+      },
+      {
+        name: 'description',
+        content: SITE_DESCRIPTION,
+      },
+      {
+        property: 'og:title',
+        content: SITE_TITLE,
+      },
+      {
+        property: 'og:description',
+        content: SITE_DESCRIPTION,
+      },
+      {
+        property: 'og:type',
+        content: 'website',
+      },
+      {
+        property: 'og:url',
+        content: PAGE_URL,
+      },
+      {
+        property: 'og:image',
+        content: OG_IMAGE_URL,
+      },
+      {
+        property: 'og:image:alt',
+        content: 'Antenna logo',
+      },
+      {
+        name: 'twitter:card',
+        content: 'summary',
+      },
+      {
+        name: 'twitter:title',
+        content: SITE_TITLE,
+      },
+      {
+        name: 'twitter:description',
+        content: SITE_DESCRIPTION,
+      },
+      {
+        name: 'twitter:image',
+        content: OG_IMAGE_URL,
       },
     ],
     links: [
