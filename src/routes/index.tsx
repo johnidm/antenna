@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
+import { ExternalLink } from 'lucide-react'
 import { fetchStations, fetchCountries, fetchStationCount } from '@/lib/services/stations'
 import { usePlayer, type Station } from '@/lib/playerContext'
 import { useSearch } from '@/lib/searchContext'
@@ -326,12 +327,30 @@ function StationsPage() {
                     </div>
                   </div>
 
-                  {station.streamUrl && (
+                  {(station.streamUrl || station.homepageUrl) && (
                     <div className="flex shrink-0 items-center gap-2 self-start sm:self-auto">
-                      <InlinePlayer src={station.streamUrl} />
-                      <div className="rounded-sm border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-muted transition-colors hover:border-fg hover:text-fg">
-                        Play on Main
-                      </div>
+                      {station.homepageUrl && (
+                        <a
+                          href={station.homepageUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => e.stopPropagation()}
+                          aria-label={`Open ${station.name} homepage`}
+                          title="Open homepage"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-sm border border-border text-fg-muted transition-colors hover:border-fg hover:text-fg"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      )}
+                      {station.streamUrl && (
+                        <>
+                          <InlinePlayer src={station.streamUrl} />
+                          <div className="rounded-sm border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-muted transition-colors hover:border-fg hover:text-fg">
+                            Play on Main
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
                 </li>

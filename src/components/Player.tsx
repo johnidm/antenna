@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Loader2, Pause, Play, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react'
+import { ExternalLink, Loader2, Pause, Play, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react'
 import { claim, release } from '@/lib/audioRegistry'
 import { usePlayer } from '@/lib/playerContext'
 
@@ -166,12 +166,26 @@ export function Player() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <p
-                className="truncate font-mono text-[13px] font-bold tracking-wider text-fg sm:text-sm"
-                title={currentStation.name}
-              >
-                {title}
-              </p>
+              <div className="flex min-w-0 items-center gap-1.5">
+                <p
+                  className="truncate font-mono text-[13px] font-bold tracking-wider text-fg sm:text-sm"
+                  title={currentStation.name}
+                >
+                  {title}
+                </p>
+                {currentStation.homepageUrl && (
+                  <a
+                    href={currentStation.homepageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open ${currentStation.name} homepage`}
+                    title="Open homepage"
+                    className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+              </div>
               <div className="mt-0.5 flex items-center gap-2">
                 <p className="truncate font-mono text-[10px] uppercase tracking-widest text-fg-muted sm:text-xs">
                   {subtitle}
