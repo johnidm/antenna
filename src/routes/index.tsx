@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { ExternalLink } from 'lucide-react'
+import Avatar from 'boring-avatars'
 import { fetchStations, fetchCountries, fetchStationCount } from '@/lib/services/stations'
 import { usePlayer, type Station } from '@/lib/playerContext'
 import { useSearch } from '@/lib/searchContext'
@@ -32,6 +33,7 @@ function StationsPage() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
+  const [brokenLogos, setBrokenLogos] = useState<Set<string>>(new Set())
 
   const load = async (query: string, country: string | null, cursorId?: string) => {
     const isInitial = !cursorId
@@ -291,16 +293,37 @@ function StationsPage() {
                 >
                   {/* Thumbnail area */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-border bg-surface-2">
-                    {station.logoUrl ? (
+                    {station.logoUrl && !brokenLogos.has(station.id) ? (
                       <img
                         src={station.logoUrl}
                         alt=""
                         loading="lazy"
+                        onError={() =>
+                          setBrokenLogos((prev) => {
+                            if (prev.has(station.id)) return prev
+                            const next = new Set(prev)
+                            next.add(station.id)
+                            return next
+                          })
+                        }
                         className="absolute inset-0 h-full w-full object-contain p-6 transition-transform duration-300 group-hover:scale-[1.03]"
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center font-mono text-4xl font-semibold text-fg-muted">
-                        {station.name.charAt(0).toUpperCase()}
+                      <div className="absolute inset-0 flex items-center justify-center p-6 transition-transform duration-300 group-hover:scale-[1.03]">
+                        <div className="relative h-full w-full">
+                          <Avatar
+                            size="100%"
+                            name={station.id}
+                            variant="marble"
+                            square
+                          />
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-0 flex items-center justify-center font-mono text-5xl font-bold text-white mix-blend-overlay drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]"
+                          >
+                            {station.name.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
                       </div>
                     )}
 
