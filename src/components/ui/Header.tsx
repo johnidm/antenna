@@ -8,7 +8,6 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-md">
       <nav className="mx-auto flex h-16 w-full max-w-7xl items-center gap-2 px-3 sm:h-20 sm:gap-4 sm:px-6 lg:h-24 lg:gap-6">
-        {/* LEFT: wordmark */}
         <div className="flex shrink-0 items-center">
           <Link to="/" className="flex items-center gap-1.5 font-mono leading-none sm:gap-2.5">
             <img
@@ -25,7 +24,6 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* CENTER: search */}
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -53,7 +51,6 @@ export default function Header() {
           </div>
         </form>
 
-        {/* RIGHT: nav links, bell, avatar */}
         <div className="flex shrink-0 items-center gap-1 sm:gap-2 lg:gap-3">
           <Link
             to="/"

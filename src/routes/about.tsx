@@ -2,12 +2,15 @@ import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { Coffee, Github, Linkedin, Radio, ExternalLink, Terminal, Code2 } from 'lucide-react'
 import { db } from '@/lib/db'
+import Loading from '@/components/ui/Loading'
 
 const getStationCount = createServerFn({ method: 'GET' }).handler(async () => {
   return db.radioStation.count()
 })
 
 export const Route = createFileRoute('/about')({
+  pendingComponent: Loading,
+  pendingMs: 3000,
   loader: () => getStationCount(),
   component: About,
 })
@@ -16,7 +19,6 @@ function About() {
   const count = Route.useLoaderData()
   return (
     <main>
-      {/* Hero */}
       <section className="relative mb-10 border-border pb-10 sm:mb-6 sm:pb-6">
         <h1 className="font-mono text-3xl font-semibold tracking-tight text-fg sm:text-4xl lg:text-5xl">
           Tuning into the world,
@@ -30,7 +32,6 @@ function About() {
         </div>
       </section>
 
-       {/* Station count stat */}
       <section className="mb-12">
         <div className="flex flex-col items-start gap-4 rounded-md border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -50,7 +51,6 @@ function About() {
         </div>
       </section>
 
-      {/* Story */}
       <section className="mb-12 space-y-5 text-base leading-relaxed text-fg sm:text-lg">
         <p>
           Hi, I&apos;m <span className="font-semibold">Johni</span> — a software engineer from Brazil.
@@ -87,7 +87,6 @@ function About() {
         </p>
       </section>
 
-      {/* Coffee */}
       <section className="mb-16">
         <a
           href="https://www.buymeacoffee.com/johnidouglasmarangon"
@@ -114,7 +113,6 @@ function About() {
         </a>
       </section>
 
-      {/* Connect */}
       <section className="mb-12">
         <header className="mb-5 flex items-end justify-between gap-4 border-b border-border pb-3">
           <h2 className="font-mono text-base font-semibold tracking-tight text-fg sm:text-lg">
@@ -141,7 +139,6 @@ function About() {
         </div>
       </section>
 
-      {/* Inspiration */}
       <section className="mb-12">
         <header className="mb-5 flex items-end justify-between gap-4 border-b border-border pb-3">
           <h2 className="font-mono text-base font-semibold tracking-tight text-fg sm:text-lg">
@@ -166,8 +163,6 @@ function About() {
         </ul>
       </section>
 
-
-      {/* REST API */}
       <section className="mb-12">
         <header className="mb-5 flex items-end justify-between gap-4 border-b border-border pb-3">
           <h2 className="font-mono text-base font-semibold tracking-tight text-fg sm:text-lg">
@@ -182,7 +177,6 @@ function About() {
           Antenna exposes a public HTTP API so you can query the radio station database programmatically.
         </p>
 
-        {/* Endpoint */}
         <div className="mb-6 flex items-center gap-3 rounded-md border border-border bg-surface px-4 py-3">
           <span className="shrink-0 rounded-sm bg-fg px-2 py-0.5 font-mono text-[11px] font-semibold text-bg">
             GET
@@ -190,7 +184,6 @@ function About() {
           <code className="font-mono text-sm text-fg">/api/radio/stations</code>
         </div>
 
-        {/* Parameters */}
         <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest">
           <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
           Query Parameters
