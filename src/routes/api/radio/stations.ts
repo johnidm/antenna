@@ -8,7 +8,9 @@ import {
   decodeCursor,
   buildNextPageUrl,
   buildPrevPageUrl,
+  type PaginatedResponse,
 } from '@/lib/pagination'
+import type { RadioStationModel as RadioStation } from '../../../../generated/prisma/models/RadioStation.js'
 
 const SORT_FIELDS = ['name', 'country'] as const
 const ORDER_VALUES = ['asc', 'desc'] as const
@@ -80,8 +82,8 @@ export const Route = createFileRoute('/api/radio/stations')({
 
         const nextCursor = hasMore && lastItem ? encodeCursor(lastItem.id) : null
         const prevCursor = hasPrev && firstItem ? encodeCursor(firstItem.id) : null
-        // TODO create a type for the response wioth Zod alternative  
-        return Response.json({
+
+        const response: PaginatedResponse<RadioStation> = {
           data: page,
           pagination: {
             nextCursor,
@@ -90,7 +92,9 @@ export const Route = createFileRoute('/api/radio/stations')({
             hasMore,
             pageSize,
           },
-        })
+        }
+
+        return Response.json(response)
       },
     },
   },

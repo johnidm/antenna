@@ -6,13 +6,11 @@ import { fetchStations, fetchCountries, fetchStationCount } from '@/lib/services
 import { usePlayer, type Station } from '@/lib/playerContext'
 import { useSearch } from '@/lib/searchContext'
 import { InlinePlayer } from '@/components/InlinePlayer'
+import { PAGE_SIZE } from '@/lib/constants/pagination'
 
 export const Route = createFileRoute('/')({
   component: StationsPage,
 })
-
-// TODO move the const to a file `lib/constants.ts`
-const PAGE_SIZE = 32
 
 function StationsPage() {
   const { submittedQuery } = useSearch()
