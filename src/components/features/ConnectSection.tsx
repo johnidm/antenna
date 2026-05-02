@@ -1,5 +1,21 @@
 import { Github, Linkedin } from 'lucide-react'
 import { ExternalCard } from '@/components/features/ExternalCard'
+import { LINKS } from '@/lib/constants/links'
+
+const CONNECT_LINKS = [
+  {
+    href: LINKS.linkedin,
+    icon: <Linkedin className="h-5 w-5" />,
+    title: 'LinkedIn',
+    subtitle: "Say hi — let's connect",
+  },
+  {
+    href: LINKS.github,
+    icon: <Github className="h-5 w-5" />,
+    title: 'GitHub',
+    subtitle: 'Source code & issues',
+  },
+]
 
 export function ConnectSection() {
   return (
@@ -10,18 +26,9 @@ export function ConnectSection() {
       </header>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <ExternalCard
-          href="https://www.linkedin.com/in/johnidouglas/"
-          icon={<Linkedin className="h-5 w-5" />}
-          title="LinkedIn"
-          subtitle="Say hi — let's connect"
-        />
-        <ExternalCard
-          href="https://github.com/johnidm/antenna"
-          icon={<Github className="h-5 w-5" />}
-          title="GitHub"
-          subtitle="Source code & issues"
-        />
+        {CONNECT_LINKS.map((link) => (
+          <ExternalCard key={link.href} {...link} />
+        ))}
       </div>
     </section>
   )

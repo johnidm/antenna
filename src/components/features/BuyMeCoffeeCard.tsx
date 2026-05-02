@@ -1,10 +1,11 @@
 import { Coffee } from 'lucide-react'
+import { LINKS } from '@/lib/constants/links'
 
 export function BuyMeCoffeeCard() {
   return (
     <section className="mb-16">
       <a
-        href="https://www.buymeacoffee.com/johnidouglasmarangon"
+        href={LINKS.buyMeCoffee}
         target="_blank"
         rel="noopener noreferrer"
         className="group flex flex-col items-start gap-3 rounded-md border border-border bg-surface p-6 transition-colors hover:bg-surface-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6"

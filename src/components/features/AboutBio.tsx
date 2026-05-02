@@ -1,4 +1,5 @@
 import { ExternalLink } from 'lucide-react'
+import { LINKS } from '@/lib/constants/links'
 
 export function AboutBio() {
   return (
@@ -16,7 +17,7 @@ export function AboutBio() {
       <p>
         This is an open source project. You can find the source code on{' '}
         <a
-          href="https://github.com/johnidm/antenna"
+          href={LINKS.github}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 border-b border-border text-fg transition-colors hover:border-fg"
@@ -29,10 +30,10 @@ export function AboutBio() {
       <p>
         Have a suggestion to improve the project? Send me an email at{' '}
         <a
-          href="mailto:johni.douglas.marangon@gmail.com"
+          href={`mailto:${LINKS.email}`}
           className="inline-flex items-center gap-1 border-b border-border text-fg transition-colors hover:border-fg"
         >
-          johni.douglas.marangon@gmail.com
+          {LINKS.email}
         </a>
         .
       </p>
