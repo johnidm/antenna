@@ -1,20 +1,19 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ExternalLink, Loader2, Pause, Play, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react'
-import { claim, release } from '@/lib/audioRegistry'
+import { useAudio } from '@/lib/useAudio'
 import { usePlayer } from '@/lib/playerContext'
 
 export function Player() {
   const { currentStation, playPrev, playNext, loading, atStart, atEnd, playRequestTick } = usePlayer()
-
-  const audioRef = useRef<HTMLAudioElement>(null)
-  const isFirstSrcRef = useRef(true)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isBuffering, setIsBuffering] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [volume, setVolume] = useState(0.8)
-  const [error, setError] = useState<string | null>(null)
 
   const src = currentStation?.streamUrl ?? null
+
+  const { audioRef, isPlaying, isBuffering, error, play, togglePlay, audioProps } = useAudio({
+    src,
+    autoPlayOnSrcChange: true,
+  })
 
   useEffect(() => {
     const el = audioRef.current
@@ -22,68 +21,12 @@ export function Player() {
     el.volume = volume
   }, [volume])
 
-  useEffect(() => {
-    setIsPlaying(false)
-    setIsBuffering(false)
-    setError(null)
-
-    if (!src) return
-
-    if (isFirstSrcRef.current) {
-      isFirstSrcRef.current = false
-      return
-    }
-
-    const el = audioRef.current
-    if (!el) return
-
-    setIsBuffering(true)
-    claim(el)
-    el.play().catch((e) => {
-      setError(e instanceof Error ? e.message : 'Playback failed')
-      setIsBuffering(false)
-    })
-  }, [src])
-
-  useEffect(() => {
-    const el = audioRef.current
-    return () => {
-      if (el) release(el)
-    }
-  }, [])
-
-  // Force playback whenever playStation() is dispatched (even if same station)
+  // Force playback whenever playStation() is dispatched (even if same station).
   useEffect(() => {
     if (playRequestTick === 0) return
-    const el = audioRef.current
-    if (!el || !src) return
-    setIsBuffering(true)
-    setError(null)
-    claim(el)
-    el.play().catch((e) => {
-      setError(e instanceof Error ? e.message : 'Playback failed')
-      setIsBuffering(false)
-    })
-  }, [playRequestTick])
-
-  if (!currentStation) return null
-
-  function togglePlay() {
-    const el = audioRef.current
-    if (!el) return
-
-    if (el.paused) {
-      setIsBuffering(true)
-      setError(null)
-      claim(el)
-      el.play().catch((e) => {
-        setError(e instanceof Error ? e.message : 'Playback failed')
-        setIsBuffering(false)
-      })
-    } else {
-      el.pause()
-    }
-  }
+    if (!src) return
+    play()
+  }, [playRequestTick, src, play])
 
   function toggleMute() {
     const el = audioRef.current
@@ -91,6 +34,8 @@ export function Player() {
     el.muted = !el.muted
     setIsMuted(el.muted)
   }
+
+  if (!currentStation) return null
 
   const title = currentStation.name.toUpperCase()
   const subtitle = (currentStation.country ?? 'ANTENNA_LIVE_TRANS').toUpperCase().replace(/\s+/g, '_')
@@ -119,27 +64,7 @@ export function Player() {
           )}
         </div>
 
-        {src && (
-          <audio
-            ref={audioRef}
-            src={src}
-            preload="none"
-            onPlaying={() => {
-              const el = audioRef.current
-              if (el) claim(el)
-              setIsPlaying(true)
-              setIsBuffering(false)
-            }}
-            onPause={() => setIsPlaying(false)}
-            onWaiting={() => setIsBuffering(true)}
-            onCanPlay={() => setIsBuffering(false)}
-            onError={() => {
-              setError('Stream unavailable')
-              setIsBuffering(false)
-              setIsPlaying(false)
-            }}
-          />
-        )}
+        {src && <audio ref={audioRef} src={src} preload="none" {...audioProps} />}
 
         <div className="mx-auto grid w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-3 py-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-6 sm:px-6 sm:py-4">
           {/* LEFT: station info */}
