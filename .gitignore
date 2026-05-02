@@ -17,3 +17,5 @@ todos.json
 /data
 
 populate.sh
+
+.claude/
