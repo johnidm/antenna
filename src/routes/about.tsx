@@ -15,6 +15,12 @@ const getStationCount = createServerFn({ method: 'GET' }).handler(async () => {
 })
 
 export const Route = createFileRoute('/about')({
+  head: () => ({
+    meta: [
+      { title: 'About · Antenna' },
+      { name: 'description', content: 'Learn about Antenna — a radio streaming app built by Johni from Brazil.' },
+    ],
+  }),
   loader: () => getStationCount(),
   component: About,
 })

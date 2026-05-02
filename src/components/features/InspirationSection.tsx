@@ -1,5 +1,18 @@
 import { InspirationItem } from '@/components/features/InspirationItem'
 
+const INSPIRATION_ITEMS = [
+  {
+    href: 'https://radio.garden/',
+    name: 'Radio Garden',
+    description: 'Explore live radio stations on an interactive globe.',
+  },
+  {
+    href: 'https://app.radiooooo.com/',
+    name: 'Radiooooo',
+    description: 'A musical time machine by country and decade.',
+  },
+]
+
 export function InspirationSection() {
   return (
     <section className="mb-12">
@@ -9,16 +22,9 @@ export function InspirationSection() {
       </header>
 
       <ul className="divide-y divide-border overflow-hidden rounded-md border border-border bg-surface">
-        <InspirationItem
-          href="https://radio.garden/"
-          name="Radio Garden"
-          description="Explore live radio stations on an interactive globe."
-        />
-        <InspirationItem
-          href="https://app.radiooooo.com/"
-          name="Radiooooo"
-          description="A musical time machine by country and decade."
-        />
+        {INSPIRATION_ITEMS.map((item) => (
+          <InspirationItem key={item.href} {...item} />
+        ))}
       </ul>
     </section>
   )
