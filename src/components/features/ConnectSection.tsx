@@ -1,4 +1,4 @@
-import { Github, Linkedin } from 'lucide-react'
+import { Github, Linkedin } from '@/components/ui/BrandIcons'
 import { ExternalCard } from '@/components/features/ExternalCard'
 import { LINKS } from '@/lib/constants/links'
 
