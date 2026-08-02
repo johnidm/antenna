@@ -66,6 +66,30 @@ pnpx prisma migrate dev --name init
 ./populate.sh
 ```
 
+## Releasing
+
+Releases are automated with [Release Please](https://github.com/googleapis/release-please). Each release bumps the version in `package.json`, creates a git tag (e.g. `v0.1.1`), and publishes a [GitHub Release](https://github.com/johnidm/antenna/releases).
+
+### Conventional commits
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) on PRs merged to `main`:
+
+- `feat:` — new feature (patch bump while below `1.0.0`)
+- `fix:` — bug fix (patch bump)
+- `feat!:` or `BREAKING CHANGE:` — breaking change (minor bump while below `1.0.0`)
+- `chore:`, `docs:`, `refactor:` — no version bump unless paired with a releasable change
+
+### Release flow
+
+1. Merge feature/fix PRs to `main` using conventional commit titles.
+2. Release Please opens or updates a **Release PR** with the next version, `CHANGELOG.md`, and `package.json` bump.
+3. Review and merge the Release PR.
+4. Release Please creates the git tag and GitHub Release automatically.
+
+The version shown on the About page comes from `package.json` and updates after the release PR is merged and deployed.
+
+---
+
 ## REST API
 
 ### `GET /api/radios/stations`
