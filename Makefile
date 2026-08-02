@@ -1,6 +1,10 @@
-.PHONY: install dev build preview test db-up db-down db-reset migrate migrate-deploy populate generate seed clean reset all
+.PHONY: install update-deps dev build preview test knip db-up db-down db-reset migrate migrate-deploy populate generate seed clean reset all
 
 install:
+	pnpm install --frozen-lockfile
+
+update-deps:
+	pnpx npm-check-updates -u
 	pnpm install
 
 dev:
@@ -14,6 +18,9 @@ preview:
 
 test:
 	pnpm test
+
+knip:
+	pnpm knip
 
 db-up:
 	docker compose up -d db

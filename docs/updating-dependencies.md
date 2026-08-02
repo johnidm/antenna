@@ -2,6 +2,16 @@
 
 Guide for safely updating dependencies in `antenna`. Run this process periodically (e.g. every sprint) or before important releases.
 
+## Frozen by default
+
+Dependencies are pinned to exact versions in `package.json`. The lockfile (`pnpm-lock.yaml`) is the source of truth for the full dependency tree.
+
+- **Normal dev / CI:** `make install` runs `pnpm install --frozen-lockfile` and fails if the lockfile is out of sync with `package.json`.
+- **Planned updates:** use `make update-deps` or the workflow below on a dedicated branch — never edit versions ad hoc on main.
+- **`nitro` exception:** the manifest keeps `npm:nitro-nightly@latest`, but the resolved nightly build is pinned in the lockfile. To bump nitro, run `pnpm update nitro` and commit the updated lockfile.
+
+Future `pnpm add` commands write exact versions automatically (`.npmrc` sets `save-exact=true`).
+
 ## Prerequisites
 
 - Clean working tree (`git status` with no pending changes).
