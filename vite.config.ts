@@ -9,6 +9,9 @@ import { nitro } from 'nitro/vite'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  test: {
+    passWithNoTests: true,
+  },
   plugins: [
     devtools(),
     nitro({
