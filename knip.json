@@ -1,0 +1,26 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/router.tsx",
+    "src/routes/**/*.{ts,tsx}",
+    "entrypoint.sh"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "prisma.config.ts"
+  ],
+  "ignore": [
+    "src/routeTree.gen.ts",
+    "generated/**"
+  ],
+  "ignoreDependencies": [
+    "@tanstack/router-plugin",
+    "@prisma/client",
+    "pg",
+    "tailwindcss",
+    "@types/pg"
+  ],
+  "ignoreBinaries": [
+    "wget"
+  ]
+}
