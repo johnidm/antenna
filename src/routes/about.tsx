@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import pkg from '../../package.json' with { type: 'json' }
 import { db } from '@/lib/db'
 import { AboutHero } from '@/components/features/AboutHero'
 import { AboutBio } from '@/components/features/AboutBio'
@@ -10,8 +11,11 @@ import { ConnectSection } from '@/components/features/ConnectSection'
 import { InspirationSection } from '@/components/features/InspirationSection'
 import { StationCountCard } from '@/components/features/StationCountCard'
 
-const getStationCount = createServerFn({ method: 'GET' }).handler(async () => {
-  return db.radioStation.count()
+const getAboutData = createServerFn({ method: 'GET' }).handler(async () => {
+  return {
+    count: await db.radioStation.count(),
+    version: pkg.version,
+  }
 })
 
 export const Route = createFileRoute('/about')({
@@ -21,12 +25,12 @@ export const Route = createFileRoute('/about')({
       { name: 'description', content: 'Learn about Antenna — a radio streaming app built by Johni from Brazil.' },
     ],
   }),
-  loader: () => getStationCount(),
+  loader: () => getAboutData(),
   component: About,
 })
 
 function About() {
-  const count = Route.useLoaderData()
+  const { count, version } = Route.useLoaderData()
   return (
     <main>
       <AboutHero />
@@ -36,7 +40,7 @@ function About() {
       <ConnectSection />
       <InspirationSection />
       <ApiDocs />
-      <AboutFooter />
+      <AboutFooter version={version} />
     </main>
   )
 }
