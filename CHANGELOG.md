@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/johnidm/antenna/compare/antenna-v0.1.1...antenna-v0.1.2) (2026-08-02)
+
+
+### Features
+
+* link version badge to GitHub releases on About page ([b79d4be](https://github.com/johnidm/antenna/commit/b79d4bee48d46ba1a37cfc01eb650f5c7ffaad24))
+* link version badge to GitHub releases on About page ([4b091bc](https://github.com/johnidm/antenna/commit/4b091bc0f93d17c3bf9a7dd9043b6fd5bf8f9892))
+
 ## [0.1.1](https://github.com/johnidm/antenna/compare/antenna-v0.1.0...antenna-v0.1.1) (2026-08-02)
 
 
