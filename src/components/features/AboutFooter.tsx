@@ -1,4 +1,5 @@
 import { Radio } from 'lucide-react'
+import { LINKS } from '@/lib/constants/links'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
@@ -8,7 +9,14 @@ export function AboutFooter({ version }: { version: string }) {
       <span className="inline-flex items-center gap-2">
         <Radio className="h-3.5 w-3.5" aria-hidden="true" />
         Antenna · Open Source
-        <span className="text-fg-muted/60">· v{version}</span>
+        <a
+          href={LINKS.releases}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-fg-muted/60 transition-colors hover:text-fg"
+        >
+          · v{version}
+        </a>
       </span>
       <span>© {CURRENT_YEAR}</span>
     </footer>
